@@ -1,32 +1,50 @@
 ﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Users
 {
-    internal class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository
     {
-        public Task<User> CreateUser(User user)
+        private readonly AppDbContext _context;
+        public UserRepository() 
+            => _context = new AppDbContext();
+
+        public async Task<User> CreateUser(User user)
         {
-            throw new NotImplementedException();
+            var entryEntity = await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+
+            return entryEntity.Entity;
         }
 
-        public Task<User> DeleteUser(int id)
+        public async Task<User> DeleteUser(User user)
         {
-            throw new NotImplementedException();
+            user.IsDeleted = true;
+            var entryEntity = _context.Users.Update(user);
+            await _context.SaveChangesAsync();
+
+            return entryEntity.Entity;
         }
 
         public Task<List<User>> GetAllUsers()
         {
-            throw new NotImplementedException();
+            return _context.Users
+                .Where(x => x.IsDeleted == false)
+                .ToListAsync();
         }
 
-        public Task<User> GetUserById(int id)
+        public async Task<User> GetUserById(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Users
+                .Where(x => x.Id == id && x.IsDeleted == false)
+                .FirstOrDefaultAsync();
         }
 
         public Task<User> GetUserById(long telegramId)
         {
-            throw new NotImplementedException();
+            return _context.Users
+                .Where(x => x.TelegramId == telegramId && x.IsDeleted == false)
+                .FirstOrDefaultAsync();
         }
     }
 }

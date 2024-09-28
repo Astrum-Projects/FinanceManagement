@@ -13,6 +13,6 @@ namespace Infrastructure.Repositories.Users
         public Task<User> GetUserById(int id);
         public Task<User> GetUserById(long telegramId);
         public Task<User> CreateUser(User user);
-        public Task<User> DeleteUser(int id);
+        public Task<User> DeleteUser(User user);
     }
 }
