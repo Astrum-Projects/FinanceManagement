@@ -7,6 +7,6 @@ namespace Infrastructure.Repositories.Categories
         Task<Category> GetByIdAsync(int id);
         Task<List<Category>> GetAllAsync();
         Task<Category> AddAsync(Category category);
-        Task<Category> DeleteAsync(int id);
+        Task<Category> DeleteAsync(Category category);
     }
 }
