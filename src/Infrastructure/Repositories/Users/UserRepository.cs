@@ -19,8 +19,7 @@ namespace Infrastructure.Repositories.Users
 
         public async Task<User> DeleteUser(User user)
         {
-            user.IsDeleted = true;
-            var entryEntity = _context.Users.Update(user);
+            var entryEntity = _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
             return entryEntity.Entity;
@@ -36,14 +35,14 @@ namespace Infrastructure.Repositories.Users
         public async Task<User> GetUserById(int id)
         {
             return await _context.Users
-                .Where(x => x.Id == id && x.IsDeleted == false)
+                .Where(x => x.Id == id)
                 .FirstOrDefaultAsync();
         }
 
         public Task<User> GetUserById(long telegramId)
         {
             return _context.Users
-                .Where(x => x.TelegramId == telegramId && x.IsDeleted == false)
+                .Where(x => x.TelegramId == telegramId)
                 .FirstOrDefaultAsync();
         }
     }
