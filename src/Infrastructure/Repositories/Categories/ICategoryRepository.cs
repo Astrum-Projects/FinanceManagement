@@ -1,6 +1,12 @@
-﻿namespace Infrastructure.Repositories.Categories
+﻿using Domain.Entities;
+
+namespace Infrastructure.Repositories.Categories
 {
     internal interface ICategoryRepository
     {
+        Task<Category> GetByIdAsync(int id);
+        Task<List<Category>> GetAllAsync();
+        Task<Category> AddAsync(Category category);
+        Task<Category> DeleteAsync(int id);
     }
 }
