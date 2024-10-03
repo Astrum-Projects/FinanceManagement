@@ -6,10 +6,7 @@ public class CategoryRepository : ICategoryRepository
 {
     private readonly DbContext _context;
 
-    public CategoryRepository(DbContext context)
-    {
-        _context = context;
-    }
+    public CategoryRepository(DbContext context) => _context = context;
 
     public async Task<Category> AddAsync(Category category)
     {
