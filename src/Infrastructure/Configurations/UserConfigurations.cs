@@ -11,11 +11,8 @@ namespace Infrastructure.Configurations
             builder.Property(x => x.IsDeleted)
                 .HasDefaultValue(false);
 
-            builder.Property(x => x.TelegramId)
-                .IsRequired(false);
-
-            builder.Property(x => x.LanguageCode)
-                .HasMaxLength(2);
+            builder.Property(x => x.CreatedAt)
+                .HasDefaultValue(DateTime.UtcNow);
 
             builder.HasQueryFilter(x => !x.IsDeleted);
         }

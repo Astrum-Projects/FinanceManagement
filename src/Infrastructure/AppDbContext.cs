@@ -9,6 +9,11 @@ namespace Infrastructure
 {
     public class AppDbContext : DbContext
     {
+        public AppDbContext()
+        {
+            Database.Migrate();
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Transfer> Transfers { get; set; }

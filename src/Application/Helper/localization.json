@@ -1,0 +1,38 @@
+﻿[
+  {
+    "Command": "hello",
+    "Uz": "Assalomu alaykum!",
+    "Ru": "Здравствуйте!",
+    "En": "Hello!"
+  },
+  {
+    "Command": "goodbye",
+    "Uz": "Xayr!",
+    "Ru": "До свидания!",
+    "En": "Goodbye!"
+  },
+  {
+    "Command": "thank_you",
+    "Uz": "Rahmat!",
+    "Ru": "Спасибо!",
+    "En": "Thank you!"
+  },
+  {
+    "Command": "please",
+    "Uz": "Iltimos!",
+    "Ru": "Пожалуйста!",
+    "En": "Please!"
+  },
+  {
+    "Command": "yes",
+    "Uz": "Ha",
+    "Ru": "Да",
+    "En": "Yes"
+  },
+  {
+    "Command": "no",
+    "Uz": "Yo'q",
+    "Ru": "Нет",
+    "En": "No"
+  }
+]

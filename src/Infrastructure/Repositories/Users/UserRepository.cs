@@ -9,12 +9,15 @@ namespace Infrastructure.Repositories.Users
         public UserRepository() 
             => _context = new AppDbContext();
 
-        public async Task<User> CreateUser(User user)
+        public async Task<User> CreateOrModifyUser(User user)
         {
-            var entryEntity = await _context.Users.AddAsync(user);
+            var entityEntry = user.Id == 0 ?
+                _context.Add(user):
+                _context.Update(user);
+
             await _context.SaveChangesAsync();
 
-            return entryEntity.Entity;
+            return entityEntry.Entity;
         }
 
         public async Task<User> DeleteUser(User user)
