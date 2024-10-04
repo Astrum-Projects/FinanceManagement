@@ -8,9 +8,11 @@ namespace Application.Services.BotServices
     public partial class UpdateHandlerService
     {
         private readonly IUserRepository _userRepository;
+        private readonly CategoryRepository _categoryRepository;
         public UpdateHandlerService()
         {
             _userRepository = new UserRepository();
+            _categoryRepository = new CategoryRepository();
         }
 
         public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)

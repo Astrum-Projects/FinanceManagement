@@ -1,9 +1,7 @@
 ﻿using Domain.Comman;
 using Domain.Entities;
-using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Infrastructure
 {
@@ -40,7 +38,11 @@ namespace Infrastructure
                 entry.Property(nameof(IDeletable.IsDeleted)).CurrentValue = true;
             }
 
-            return await base.SaveChangesAsync(cancellationToken);
+            var result = await base.SaveChangesAsync(cancellationToken);
+
+            ChangeTracker.Clear();
+
+            return result;
         }
     }
 }

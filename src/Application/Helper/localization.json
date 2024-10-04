@@ -34,5 +34,35 @@
     "Uz": "Yo'q",
     "Ru": "Нет",
     "En": "No"
+  },
+  {
+    "Command": "select-category",
+    "Uz": "Transfer categoriyani tanlang!",
+    "Ru": "Выберите категорию перевода!",
+    "En": "Select the transfer category!"
+  },
+  {
+    "Command": "select-transfer-type",
+    "Uz": "Transfer turini tanlang!",
+    "Ru": "Выберите тип перевода!",
+    "En": "Select the transfer type!"
+  },
+  {
+    "Command": "income",
+    "Uz": "Kirim",
+    "Ru": "Доход",
+    "En": "Income"
+  },
+  {
+    "Command": "expense",
+    "Uz": "Chiqim",
+    "Ru": "Расход",
+    "En": "Expense"
+  },
+  {
+    "Command": "enter-summa",
+    "Uz": "Summani kirit",
+    "Ru": "Введите сумму",
+    "En": "Enter the amount"
   }
 ]

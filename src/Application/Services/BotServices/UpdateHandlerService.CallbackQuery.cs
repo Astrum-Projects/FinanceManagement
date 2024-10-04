@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot.Types;
+﻿using Telegram.Bot.Types;
 using Telegram.Bot;
 using Application.Helper;
-using Domain.Entities;
 using User = Domain.Entities.User;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Application.Services.BotServices
 {
@@ -15,12 +10,15 @@ namespace Application.Services.BotServices
     {
         public async Task HandleCallbackQueryAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
+            var user = await update.GetUserAsync();
             var callbackData = update.CallbackQuery.Data;
             var keys = callbackData.Split(' ');
 
             var callbackHandler = keys[0] switch
             {
-                "lan" => HandleLanguageSelectAsync(botClient, update, keys, cancellationToken)
+                "lan" => HandleLanguageSelectAsync(botClient, update, user, keys, cancellationToken),
+                "transfertype" => HandleTransferTypeSelectAsync(botClient, update, user, keys, cancellationToken),
+                "category" => HandleCategoryTypeSelectAsync(botClient, update, user, keys, cancellationToken),
             };
 
             try
@@ -34,10 +32,30 @@ namespace Application.Services.BotServices
 
         }
 
-        private async Task HandleLanguageSelectAsync(ITelegramBotClient botClient, Update update, string[] keys, CancellationToken cancellationToken)
+        private async Task HandleCategoryTypeSelectAsync(ITelegramBotClient botClient, Update update, User user, string[] keys, CancellationToken cancellationToken)
         {
-            User user = await _userRepository.GetUserById(telegramId: update.CallbackQuery.From.Id);
-            
+            await botClient.SendTextMessageAsync(
+                chatId: update.CallbackQuery.Message.Chat.Id,
+                text: Localization.GetLocalizedCommand("enter-summa", user.LanguageCode),
+                cancellationToken: cancellationToken);
+        }
+
+        private async Task HandleTransferTypeSelectAsync(ITelegramBotClient botClient, Update update, User user, string[] keys, CancellationToken cancellationToken)
+        {
+            // faqat shu user uchun categorylarni olib kel
+            var categories = await _categoryRepository.GetAllAsync();
+
+            var buttons = categories.Select(x => new List<InlineKeyboardButton> { InlineKeyboardButton.WithCallbackData(x.GetLocalizedName(user.LanguageCode), $"category {x.Id}") }).ToList();
+
+            await botClient.SendTextMessageAsync(
+                chatId: update.CallbackQuery.Message.Chat.Id,
+                text: Localization.GetLocalizedCommand("select-category", user.LanguageCode),
+                replyMarkup: new InlineKeyboardMarkup(buttons),
+                cancellationToken: cancellationToken);
+        }
+
+        private async Task HandleLanguageSelectAsync(ITelegramBotClient botClient, Update update, User user, string[] keys, CancellationToken cancellationToken)
+        {
             if (user == null) 
             {
                 user = new User()
@@ -60,6 +78,18 @@ namespace Application.Services.BotServices
             await botClient.SendTextMessageAsync(
                 chatId: update.CallbackQuery.Message.Chat.Id,
                 text: Localization.GetLocalizedCommand("hello",user.LanguageCode),
+                cancellationToken: cancellationToken);
+
+            var buttons = new List<InlineKeyboardButton>()
+            {
+                InlineKeyboardButton.WithCallbackData(Localization.GetLocalizedCommand("income",user.LanguageCode),"transfertype +"),
+                InlineKeyboardButton.WithCallbackData(Localization.GetLocalizedCommand("expense",user.LanguageCode),"transfertype -"),
+            };
+
+            await botClient.SendTextMessageAsync(
+                chatId: update.CallbackQuery.Message.Chat.Id,
+                text: Localization.GetLocalizedCommand("select-transfer-type", user.LanguageCode),
+                replyMarkup: new InlineKeyboardMarkup(buttons),
                 cancellationToken: cancellationToken);
         }
     }
