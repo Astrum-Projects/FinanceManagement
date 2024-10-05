@@ -34,5 +34,23 @@
     "Uz": "Yo'q",
     "Ru": "Нет",
     "En": "No"
+  },
+  {
+    "Command": "income",
+    "Uz": "Kirim",
+    "Ru": "Доход",
+    "En": "Income"
+  },
+  {
+    "Command": "expense",
+    "Uz": "Chiqim",
+    "Ru": "Расход",
+    "En": "Expense"
+  },
+  {
+    "Command": "select",
+    "Uz": "Birini tanlang!",
+    "Ru": "Выберите один!",
+    "En": "Select one!"
   }
 ]

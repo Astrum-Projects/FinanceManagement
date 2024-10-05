@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 
 namespace Application.Helper
 {
@@ -12,7 +7,7 @@ namespace Application.Helper
         public static string GetLocalizedCommand(string command, string languageCode)
         {
             var jsonfilePath = @"..\..\..\..\Application\Helper\localization.json"; // Path to localization file
-            var jsonString = System.IO.File.ReadAllText(jsonfilePath);
+            var jsonString = File.ReadAllText(jsonfilePath);
             var commands = JsonSerializer.Deserialize<List<LocalizationCommand>>(jsonString);
 
             var localizedCommand = commands.FirstOrDefault(x => x.Command == command);
