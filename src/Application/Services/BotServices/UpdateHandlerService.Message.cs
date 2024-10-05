@@ -1,6 +1,7 @@
 ﻿using Telegram.Bot.Types;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
+using Application.Helper;
 
 namespace Application.Services.BotServices
 {
@@ -8,7 +9,9 @@ namespace Application.Services.BotServices
     {
         private async Task HandleMessageAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
         {
-            if(update.Message == null) throw new ArgumentNullException(nameof(update)+ "type unknown");
+            var user = await update.UserAsync();
+
+            if (update.Message == null) throw new ArgumentNullException(nameof(update)+ "type unknown");
             var message = update.Message;
 
             var messageHandler = message.Text switch

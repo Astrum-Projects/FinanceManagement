@@ -40,7 +40,10 @@ namespace Infrastructure
                 entry.Property(nameof(IDeletable.IsDeleted)).CurrentValue = true;
             }
 
-            return await base.SaveChangesAsync(cancellationToken);
+            var result = await base.SaveChangesAsync(cancellationToken);
+            ChangeTracker.Clear();
+
+            return result;
         }
     }
 }
