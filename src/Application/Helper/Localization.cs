@@ -1,8 +1,9 @@
-﻿using System.Text.Json;
+﻿using Domain.Comman;
+using System.Text.Json;
 
 namespace Application.Helper
 {
-    public class Localization
+    public static class Localization
     {
         public static string GetLocalizedCommand(string command, string languageCode)
         {
@@ -20,13 +21,24 @@ namespace Application.Helper
                 _ => command
             };
         }
-    }
 
-    public class LocalizationCommand
-    {
-        public string Command { get; set; }
-        public string Uz { get; set; }
-        public string Ru { get; set; }
-        public string En { get; set; }
+        public static string GetLocalizedName(this ILocalizedName localizedName, string languageCode)
+        {
+            return languageCode switch
+            {
+                "uz" => localizedName.NameUz,
+                "ru" => localizedName.NameRu,
+                "en" => localizedName.NameEn,
+                _ => localizedName.NameUz
+            };
+        }
+
+        public class LocalizationCommand
+        {
+            public string Command { get; set; }
+            public string Uz { get; set; }
+            public string Ru { get; set; }
+            public string En { get; set; }
+        }
     }
 }

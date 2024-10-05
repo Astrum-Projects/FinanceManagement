@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot.Types;
+﻿using Telegram.Bot.Types;
 using Telegram.Bot;
 using Application.Helper;
-using Domain.Entities;
 using User = Domain.Entities.User;
 using Telegram.Bot.Types.ReplyMarkups;
+using Domain.Entities;
+using Domain.Enums;
 
 namespace Application.Services.BotServices
 {
@@ -23,7 +19,9 @@ namespace Application.Services.BotServices
 
             var callbackHandler = keys[0] switch
             {
-                "lan" => HandleLanguageSelectAsync(botClient, update, user, keys, cancellationToken)
+                "select-lan" => HandleLanguageSelectAsync(botClient, update, user, keys, cancellationToken),
+                "select-transfer-type" => HandleTransferTypeSelectAsync(botClient, update, user, keys, cancellationToken),
+                "select-category" => HandleCategorySelectAsync(botClient, update, user, keys, cancellationToken),
             };
 
             try
@@ -35,6 +33,43 @@ namespace Application.Services.BotServices
                 throw;
             }
 
+        }
+
+        private async Task HandleCategorySelectAsync(ITelegramBotClient botClient, Update update, User user, string[] keys, CancellationToken cancellationToken)
+        {
+            var categoryId = keys[1];
+
+            await botClient.SendTextMessageAsync(
+                chatId: update.CallbackQuery.Message.Chat.Id,
+                text: Localization.GetLocalizedCommand("enter-amount",user.LanguageCode),
+                cancellationToken: cancellationToken);
+
+            _state.SetState(user.TelegramId, EUserState.Amount, int.Parse(categoryId));
+        }
+
+        private async Task HandleTransferTypeSelectAsync(ITelegramBotClient botClient, Update update, User user, string[] keys, CancellationToken cancellationToken)
+        {
+            var transferType = keys[1];
+
+            List<Category> categories = null;
+
+            //todo transfer typega qarab filter qil
+            if(transferType == "+")
+            {
+                categories = await _categoryRepository.GetAllAsync();
+            }
+            else if (transferType == "-")
+            {
+                categories = await _categoryRepository.GetAllAsync();
+            }
+
+            List<List<InlineKeyboardButton>> buttons = categories.Select(x => new List<InlineKeyboardButton>() { InlineKeyboardButton.WithCallbackData(x.GetLocalizedName(user.LanguageCode), $"select-category {x.Id}") }).ToList();
+
+            await botClient.SendTextMessageAsync(
+                    chatId: update.CallbackQuery.Message.Chat.Id,
+                    text: Localization.GetLocalizedCommand("select", user.LanguageCode),
+                    replyMarkup: new InlineKeyboardMarkup(buttons),
+                    cancellationToken: cancellationToken);
         }
 
         private async Task HandleLanguageSelectAsync(ITelegramBotClient botClient, Update update, User user, string[] keys, CancellationToken cancellationToken)
@@ -64,8 +99,12 @@ namespace Application.Services.BotServices
                 cancellationToken: cancellationToken);
 
             var buttons = new List<InlineKeyboardButton>() {
-                InlineKeyboardButton.WithCallbackData(Localization.GetLocalizedCommand(Localization.GetLocalizedCommand("income",user.LanguageCode), "transfer-type +")),
-                InlineKeyboardButton.WithCallbackData(Localization.GetLocalizedCommand(Localization.GetLocalizedCommand("expense",user.LanguageCode), "transfer-type -"))
+                InlineKeyboardButton.WithCallbackData(
+                    text: Localization.GetLocalizedCommand("income",user.LanguageCode),
+                    callbackData: "select-transfer-type +"),
+                InlineKeyboardButton.WithCallbackData(
+                    text: Localization.GetLocalizedCommand("expense",user.LanguageCode),
+                    callbackData: "select-transfer-type -")
             };
 
             await botClient.SendTextMessageAsync(

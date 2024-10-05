@@ -52,5 +52,17 @@
     "Uz": "Birini tanlang!",
     "Ru": "Выберите один!",
     "En": "Select one!"
+  },
+  {
+    "Command": "enter-amount",
+    "Uz": "Summa kirit! (masalan: 100.000)",
+    "Ru": "Введите сумму! (например: 100.000)",
+    "En": "Enter the amount! (e.g.: 100.000)"
+  },
+  {
+    "Command": "invalid-format",
+    "Uz": "Format xato!",
+    "Ru": "Неверный формат!",
+    "En": "Invalid format!"
   }
 ]
