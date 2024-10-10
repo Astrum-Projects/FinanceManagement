@@ -40,7 +40,16 @@ namespace Infrastructure
                 entry.Property(nameof(IDeletable.IsDeleted)).CurrentValue = true;
             }
 
-            var result = await base.SaveChangesAsync(cancellationToken);
+            var createdAt = ChangeTracker
+                .Entries<Auditable>()
+                .Where(x => x.State == EntityState.Added);
+
+            foreach (var entry in createdAt)
+            {
+                entry.Property(nameof(Auditable.CreatedAt)).CurrentValue = DateTime.UtcNow;
+            }
+
+                var result = await base.SaveChangesAsync(cancellationToken);
             ChangeTracker.Clear();
 
             return result;

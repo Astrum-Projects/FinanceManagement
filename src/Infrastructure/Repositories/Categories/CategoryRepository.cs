@@ -7,7 +7,7 @@ public class CategoryRepository : ICategoryRepository
 {
     private readonly AppDbContext _context;
 
-    public CategoryRepository() 
+    public CategoryRepository()
         => _context = new AppDbContext();
 
     public async Task<Category> AddAsync(Category category)
@@ -26,8 +26,16 @@ public class CategoryRepository : ICategoryRepository
         return entryEntity.Entity;
     }
 
-    public async Task<List<Category>> GetAllAsync() 
+    public async Task<List<Category>> GetAllAsync()
         => await _context.Categories.ToListAsync();
+
+    public async Task<List<Category>> GetAllAsync(int userId, bool isIncome)
+    {
+        return await _context.Categories
+            .Where(x => (x.UserId == null || x.UserId == userId)
+                     && x.IsIncome == isIncome)
+            .ToListAsync();
+    }
 
     public async Task<Category> GetByIdAsync(int id) 
         => await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);

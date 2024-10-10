@@ -56,11 +56,11 @@ namespace Application.Services.BotServices
             //todo transfer typega qarab filter qil
             if(transferType == "+")
             {
-                categories = await _categoryRepository.GetAllAsync();
+                categories = await _categoryRepository.GetAllAsync(user.Id,true);
             }
             else if (transferType == "-")
             {
-                categories = await _categoryRepository.GetAllAsync();
+                categories = await _categoryRepository.GetAllAsync(user.Id,false);
             }
 
             List<List<InlineKeyboardButton>> buttons = categories.Select(x => new List<InlineKeyboardButton>() { InlineKeyboardButton.WithCallbackData(x.GetLocalizedName(user.LanguageCode), $"select-category {x.Id}") }).ToList();
@@ -93,9 +93,24 @@ namespace Application.Services.BotServices
                 await _userRepository.CreateOrModifyUser(user);
             }
 
+
+            var menuButtons = new List<List<KeyboardButton>>()
+            {
+                //birinchi qator
+                new List<KeyboardButton>()
+                {
+                    new KeyboardButton("+" + Localization.GetLocalizedCommand("income",user.LanguageCode)),
+                    new KeyboardButton("-" + Localization.GetLocalizedCommand("expense",user.LanguageCode))
+                }
+            };
+
             await botClient.SendTextMessageAsync(
                 chatId: update.CallbackQuery.Message.Chat.Id,
                 text: Localization.GetLocalizedCommand("hello",user.LanguageCode),
+                replyMarkup: new ReplyKeyboardMarkup(menuButtons)
+                {
+                    ResizeKeyboard = true
+                },
                 cancellationToken: cancellationToken);
 
             var buttons = new List<InlineKeyboardButton>() {

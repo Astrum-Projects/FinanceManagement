@@ -6,6 +6,7 @@ namespace Infrastructure.Repositories.Categories
     {
         Task<Category> GetByIdAsync(int id);
         Task<List<Category>> GetAllAsync();
+        Task<List<Category>> GetAllAsync(int userId, bool isIncome);
         Task<Category> AddAsync(Category category);
         Task<Category> DeleteAsync(Category category);
     }

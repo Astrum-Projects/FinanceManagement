@@ -10,5 +10,8 @@ namespace Domain.Entities
         public string NameRu { get; set; }
         public string NameEn { get; set; }
         public bool IsDeleted { get ; set ; }
+
+        public int? UserId { get; set; }
+        public User User { get; set; }
     }
 }

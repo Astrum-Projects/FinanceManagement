@@ -28,6 +28,21 @@ namespace Infrastructure.Repositories.Transfers
         public Task<List<Transfer>> GetAllTransfersAsync() 
             => _context.Transfers.ToListAsync();
 
+        public async Task<List<Transfer>> GetAllTransfersAsync(int userId)
+        {
+            return await _context.Transfers
+                .Where(x => x.UserId == userId)
+                .ToListAsync();
+        }
+
+        public async Task<List<Transfer>> GetAllTransfersAsync(int userId, bool isIncome)
+        {
+            return await _context.Transfers
+                .Include(x => x.Category)
+                .Where(x => x.UserId == userId && x.Category.IsIncome == isIncome)
+                .ToListAsync();
+        }
+
         public async Task<Transfer> GetTransferByIdAsync(int id) 
             => await _context.Transfers.FirstOrDefaultAsync(x => x.Id == id);
     }
